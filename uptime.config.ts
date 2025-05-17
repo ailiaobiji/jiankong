@@ -23,7 +23,7 @@ const workerConfig = {
       // `method` should be a valid HTTP Method
       method: 'GET',
       // `target` is a valid URL
-      target: 'https://www.google.com',
+      target: 'https://www.wuchens.com',
       // [OPTIONAL] `tooltip` is ONLY used at status page to show a tooltip
       // [OPTIONAL] `statusPageLink` is ONLY used for clickable link at status page
       statusPageLink: '',
@@ -52,20 +52,39 @@ const workerConfig = {
       // `method` should be `TCP_PING` for tcp monitors
       method: 'GET',
       // `target` should be `host:port` for tcp monitors
-      target: 'https://www.bing.com',
+      target: 'https://www.vpsthe.com',
       statusPageLink: '',
       timeout: 10000,
     },
-
+        {
+      id: '3',
+      name: '论坛',
+      // `method` should be `TCP_PING` for tcp monitors
+      method: 'GET',
+      // `target` should be `host:port` for tcp monitors
+      target: 'https://www.virtnotes.com',
+      statusPageLink: '',
+      timeout: 10000,
+    },
+    {
+      id: '4',
+      name: '影视',
+      // `method` should be `TCP_PING` for tcp monitors
+      method: 'GET',
+      // `target` should be `host:port` for tcp monitors
+      target: 'https://www.1414144.xyz',
+      statusPageLink: '',
+      timeout: 10000,
+    },
 
   ],
   notification: {
     // [Optional] apprise API server URL
     // if not specified, no notification will be sent
-    appriseApiServer: "https://通知网址/notify",
+    appriseApiServer: "https://tg-ashy.vercel.app/api/notify",
     // [Optional] recipient URL for apprise, refer to https://github.com/caronc/apprise
     // if not specified, no notification will be sent
-    recipientUrl: "tgram://机器人密钥/你的id",
+    recipientUrl: "tgram://机器人密钥/电报id",
     // [Optional] timezone used in notification messages, default to "Etc/GMT"
     timeZone: "Asia/Shanghai",
     // [Optional] grace period in minutes before sending a notification
