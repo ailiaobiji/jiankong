@@ -1,4 +1,7 @@
+'use client'
+
 import Head from 'next/head'
+import { useEffect, useState } from 'react'
 
 import { Inter } from 'next/font/google'
 import { MonitorState, MonitorTarget } from '@/uptime.types'
@@ -22,13 +25,21 @@ export default function Home({
   tooltip?: string
   statusPageLink?: string
 }) {
-  let state;
+  let state: MonitorState | undefined;
   if (stateStr !== undefined) {
-    state = JSON.parse(stateStr) as MonitorState
+    state = JSON.parse(stateStr) as MonitorState;
   }
 
-  // Specify monitorId in URL hash to view a specific monitor (can be used in iframe)
-  const monitorId = window.location.hash.substring(1);
+  const [currentTime, setCurrentTime] = useState(Math.round(Date.now() / 1000));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Math.round(Date.now() / 1000));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const monitorId = typeof window !== 'undefined' ? window.location.hash.substring(1) : '';
   if (monitorId) {
     const monitor = monitors.find((monitor) => monitor.id === monitorId);
     if (!monitor || !state) {
@@ -44,6 +55,12 @@ export default function Home({
       </div>
     )
   }
+
+  // 移除 "(xx sec ago)"，只保留日期时间
+  const lastUpdatedText =
+    state !== undefined
+      ? `Last updated on: ${new Date(state.lastUpdate * 1000).toLocaleString()}`
+      : '';
 
   return (
     <>
@@ -69,24 +86,80 @@ export default function Home({
           </div>
         )}
 
-        <Divider mt="lg" />
-        <Text size="xs" mt="xs" mb="xs" style={{
-          textAlign: 'center'
-        }}>
-          Open-source monitoring and status page powered by{' '}
-          <a href="https://github.com/amclubs/am-uptime-flare" target="_blank">
-            UptimeFlare
-          </a>{' '}
-          and{' '}
-          <a href="https://www.cloudflare.com/" target="_blank">
-            Cloudflare
-          </a>
-          , made with ❤ by{' '}
-          <a href="https://github.com/amclubs" target="_blank">
-            amclubs
-          </a>
-          .
-        </Text>
+        {state !== undefined && (
+          <Text
+            size="md"
+            mt="md"
+            style={{
+              textAlign: 'center',
+              color: '#70778c',
+              fontSize: '15px', // ← 修改这里自定义字体大小
+            }}
+          >
+            {lastUpdatedText}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <br />
+            Copyright © All rights reserved
+            <a href="" target="_blank" rel="external nofollow"></a>
+            <br />
+
+
+            <a href="" className="footer-link"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <br />
+            Open-source monitoring and status page powered by
+            <a href="https://github.com/lyc8503/UptimeFlare" target="_blank" rel="external nofollow">UptimeFlare</a>
+            and
+            <a href="https://www.cloudflare.com/" target="_blank" rel="external nofollow">Cloudflare</a>
+
+
+            , 
+            <a href="" target="_blank" rel="external nofollow"></a>
+
+
+
+
+
+
+
+
+          </Text>
+        )}
+
+
       </main>
     </>
   )
@@ -97,10 +170,8 @@ export async function getServerSideProps() {
     UPTIMEFLARE_STATE: KVNamespace
   }
 
-  // Read state as string from KV, to avoid hitting server-side cpu time limit
   const state = (await UPTIMEFLARE_STATE?.get('state')) as unknown as MonitorState
 
-  // Only present these values to client
   const monitors = workerConfig.monitors.map((monitor) => {
     return {
       id: monitor.id,
